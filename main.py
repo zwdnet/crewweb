@@ -68,9 +68,15 @@ while queue:
     if len(queue) > maxCount:
         bCrew = False
     soup = BeautifulSoup(data, "lxml")
-    data = soup.get_text()
+    #data = soup.get_text()
+    #清理script,style
+    word1 = [script.extract() for script in soup.findAll('script)]')]
+    word2 = [style.extract() for style in soup.findAll('style')]
+    #清理HTML标签
+    regl = re.compile("<[^>]*>")
+    content = regl.sub('', soup.prettify())
     word = re.compile("[\u4e00-\u9fa5]+") #只爬中文
-    for s in word.findall(data):
+    for s in word.findall(content):
         output.write(s)
     #暂停一段时间，防止服务器负荷过重
     #time.sleep(0.01)
